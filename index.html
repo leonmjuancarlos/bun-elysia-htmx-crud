@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRUD con HTMX y Bun</title>
+  
+   <meta 
+    name="htmx-config" 
+    content='{
+      "responseHandling":[
+          {"code":"422", "swap": true},
+          {"code":"...", "swap": true}
+      ]
+    }'
+  />
+   <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.js" integrity="sha384-ezjq8118wdwdRMj+nX4bevEi+cDLTbhLAeFF688VK8tPDGeLUe0WoY2MZtSla72F" crossorigin="anonymous"></script>
+
+  
+  <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Mi Lista de Tareas (HTMX + Elysia)</h1>
+    </header>
+    
+    <form
+      hx-post="/tasks"
+      hx-target="#task-list"
+      hx-swap="afterbegin"
+      hx-on::after-request="this.reset()"
+      hx-on:clear-error="htmx.find('#form-error').innerHTML = ''"
+    >
+      <input type="text" name="text" placeholder="Nueva tarea...">
+      <button type="submit">Añadir</button>
+    </form>
+
+    <div id="form-error"></div>
+
+    <ul id="task-list" 
+      hx-get="/tasks" 
+      hx-trigger="load" 
+      hx-swap="innerHTML"
+    >
+      <li>Cargando tareas...</li>
+    </ul>
+    
+  </main>
+  <div id="modal-container"></div>
+</body>
+</html>
